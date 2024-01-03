@@ -318,12 +318,40 @@ def qre(a,b):
             n=poly_deg(a)
         return p,a
 
+# Quotient et reste d'une division euclidienne sur Fq
 
+def poly_quotq(a,b,q):
+    a=polynomeq(a,q)
+    b=polynomeq(b,q)
+    y=0
+    n=poly_deg(a)
+    m=poly_deg(b)
+    p=[]
+    if m==0:
+        return mcq(inverseq(b[0]),a,q), [0]
+    else :
+        while m<=n:
+            k=poly_mulq(xn(n-m),mcq(a[n],miq(b,q),q),q)
+            o=mcq(a[n],xn(n-m),q)
+            z=mcq(inverseq(b[m],q),o,q)
+            p=poly_sommeq(p,z,q)
+            a = poly_diffq(a,k,q)
+            polynome(a)
+            n=poly_deg(a)
+        return p,a
+
+#Calcul du produit de p et q modulo f
 def poly_mul_mod(p,  q, mod):
-    a = poly_mul(p,q)
+    a = poly_mulq(p,q)
     b = poly_reste(a,mod)
     return b
 
+
+#Calcul du produit de p et q modulo f sur Fk
+def poly_mul_modq(p,  q, mod, k):
+    a = poly_mul(p,q, k)
+    b = poly_resteq(a,mod,k)
+    return b
 
 #pgcd de deux polynomes
 
@@ -351,6 +379,32 @@ def poly_gcd(a,b):
     return R0
 
 
+#pgcd de deux polynomes sur Fk
+
+def poly_gcd(a,b,k):
+    polynome(a)
+    polynome(b)
+    U0 = [1]
+    U1 = [0]
+    V0 = [0]
+    V1 = [1]
+    R0 = a
+    R1 = b
+    while R1!=[0]:
+        Q=poly_quotq(R0,R1,k)
+        R2 = polynome(poly_diffq(R0,poly_mulq(Q,R1,k),k))
+        U2 = polynome(poly_diffq(U0,poly_mulq(Q,U1,k),k))
+        V2 = polynome(poly_diffq(V0,poly_mulq(Q,V1,k),k))
+        
+        R0 = R1
+        R1 = R2
+        U0 = U1
+        U1 = U2
+        V0 = V1
+        V1 = V2
+    return R0
+
+
 #L'évaluation d'un polynome
 
 def poly_eval(p,a):
@@ -360,6 +414,14 @@ def poly_eval(p,a):
         s = s*a + p[n-i-1]
     return s
 
+#L'évaluation d'un polynome sur Fk
+
+def poly_eval(p,a,k):
+    n=poly_deg(p)
+    s = p[n]
+    for i in range(n):
+        s = (s*a + p[n-i-1])%k
+    return s
 
 #Afficher le polynome
 
