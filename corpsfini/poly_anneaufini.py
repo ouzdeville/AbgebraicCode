@@ -4,7 +4,7 @@ m=6
 p=11
 f=poly_diffq(xn(m),xn(1),11)
 
-# Détermination des v_i
+# Détermination des solutions v_i
 def solution(p,m):
     S = []
     for i in range(p):
@@ -13,7 +13,7 @@ def solution(p,m):
     return S
 
 
-# les f_i
+# On pose f_i = v - v_i pour chaque solution
 
 def factf(p,m):
     S = solution(p,m)
@@ -23,7 +23,7 @@ def factf(p,m):
         F.append(poly_diffq(xn(1),[S[i]], p))
     return F
     
-# Les g_i
+# On pose g_i = f/f_i
 def factg(p,m,f):
     F = factf(p,m)
     #a=len(F)
@@ -33,7 +33,7 @@ def factg(p,m,f):
     return G
 
 
-# Détermination des a_i et b_i
+# Détermination des a_i et b_i tels que a_i.f_i + b_i.g_i = 1
 
 def ab(p,m,f):
     F = factf(p,m)
@@ -46,7 +46,7 @@ def ab(p,m,f):
         B.append(mcq(inverseq(poly_tete(r),p),v,p))
     return A,B
 
-# les idempotemps e_i
+# Mis en place des idempotemps e_i = b_i.g_i
 
 def idempotent(p,m,f):
     E=[]
@@ -61,6 +61,7 @@ A,B = ab(p,m,f)
 F = factf(p,m)
 G = factg(p,m,f)
 dd= poly_sommeq(poly_mul_modq(A[1],F[1],f,p),poly_mul_modq(B[1],G[1],f,p),p)
-cc = idempotent(p,m,f)
-print(cc)
+ee = idempotent(p,m,f)
+print(ee)
 print(poly_mul_modq([10,8,6,4,7],[0, 3, 1, 4, 5, 9],f,p))
+print(solution(p,m))
